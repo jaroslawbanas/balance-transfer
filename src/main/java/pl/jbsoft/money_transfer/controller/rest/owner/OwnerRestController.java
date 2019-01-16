@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.jbsoft.money_transfer.business.account.Owner;
 import pl.jbsoft.money_transfer.controller.repository.OwnerRepository;
-import pl.jbsoft.money_transfer.controller.rest.V1Constatnts;
+import pl.jbsoft.money_transfer.controller.rest.V1Constants;
 
 import java.util.Collection;
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 public class OwnerRestController {
 
-    public static final String OWNERS_URL = V1Constatnts.BASE_URL + "/owners";
+    public static final String OWNERS_URL = V1Constants.BASE_URL + "/owners";
 
     @Autowired
     private OwnerRepository ownerRepository;

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.jbsoft.money_transfer.business.transfer.Transfer;
 import pl.jbsoft.money_transfer.controller.repository.TransferRepository;
-import pl.jbsoft.money_transfer.controller.rest.V1Constatnts;
+import pl.jbsoft.money_transfer.controller.rest.V1Constants;
 import pl.jbsoft.money_transfer.controller.transfer.TransferService;
 
 import java.util.Collection;
@@ -24,7 +24,7 @@ public class TransferRestController {
 
     private final static Logger LOGGER = Logger.getAnonymousLogger();
 
-    public static final String TRANSFER_URL = V1Constatnts.BASE_URL + "/transfers";
+    public static final String TRANSFER_URL = V1Constants.BASE_URL + "/transfers";
 
     @Autowired
     private ModelMapper modelMapper;
@@ -57,13 +57,13 @@ public class TransferRestController {
                     .orElse(ResponseEntity.notFound().build());
         } catch (Exception ex) {
             LOGGER.log(Level.WARNING, ex.getMessage(), ex);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Action failure", ex);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
         }
     }
 
     @PostMapping(TRANSFER_URL)
     public @ResponseBody
-    ResponseEntity<TransferRestModel> create(@RequestBody CreateTransferModel createTransferModel) throws Exception {
+    ResponseEntity<TransferRestModel> create(@RequestBody CreateTransferModel createTransferModel) {
         try {
             Transfer fromRequest = transferService.createFromRequest(createTransferModel);
             Transfer save = transferRepository.save(fromRequest);
@@ -72,7 +72,7 @@ public class TransferRestController {
                     .body(convertToDto(save));
         } catch (Exception ex) {
             LOGGER.log(Level.WARNING, ex.getMessage(), ex);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Action failure", ex);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
         }
     }
 

@@ -1,6 +1,7 @@
 package pl.jbsoft.money_transfer.controller.rest.transfer;
 
 import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ public class TransferRestControllerTest {
     private static final String SINGLE_TRANSFER_JSON = "{\"transferId\":\"2fa1078f-9c2e-4b22-85c7-3ce11b3c06a1\",\"fromAccountId\":1,\"toAccountId\":2,\"balanceAmount\":10,\"balanceCurrency\":\"USD\",\"transferDate\":\"2018-12-31T23:00:00.000+0000\"}";
     private static final String CREATE_TRANSFER_JSON = "{\"fromAccountId\":1,\"toAccountId\":2,\"amount\":10,\"currency\":\"USD\"}";
     private static final String CREATE_TRANSFER_JSON_WITH_NEGATIVE_AMOUNT = "{\"fromAccountId\":1,\"toAccountId\":2,\"amount\":-10,\"currency\":\"USD\"}";
+    private static final String CREATE_TRANSFER_JSON_WITH_DIFFERENCE_CURRENCY = "{\"fromAccountId\":1,\"toAccountId\":4,\"amount\":10,\"currency\":\"USD\"}";
+    private static final String CREATE_TRANSFER_JSON_WITH_TOO_LOW_AMOUNT = "{\"fromAccountId\":3,\"toAccountId\":1,\"amount\":10,\"currency\":\"USD\"}";
 
     @Autowired
     private MockMvc mockMvc;
@@ -64,11 +67,35 @@ public class TransferRestControllerTest {
     }
 
     @Test
-    public void should_return_bad_request_for() throws Exception {
-        RestControllerTestHelper.buildForStatus(mockMvc, MockMvcResultMatchers.status().isBadRequest())
+    public void should_return_bad_request_for_minus_amount() throws Exception {
+        String errorMessage = RestControllerTestHelper.buildForStatus(mockMvc, MockMvcResultMatchers.status().isBadRequest())
                 .url(TransferRestController.TRANSFER_URL)
                 .requestJson(CREATE_TRANSFER_JSON_WITH_NEGATIVE_AMOUNT)
-                .checkPostRequest();
-        //todo
+                .checkPostRequest()
+                .andReturn().getResponse().getErrorMessage();
+
+        Assert.assertEquals("Amount transfer should be positive", errorMessage);
+    }
+
+    @Test
+    public void should_return_bad_request_for_not_same_currency() throws Exception {
+        String errorMessage = RestControllerTestHelper.buildForStatus(mockMvc, MockMvcResultMatchers.status().isBadRequest())
+                .url(TransferRestController.TRANSFER_URL)
+                .requestJson(CREATE_TRANSFER_JSON_WITH_DIFFERENCE_CURRENCY)
+                .checkPostRequest()
+                .andReturn().getResponse().getErrorMessage();
+
+        Assert.assertEquals("Transfer between difference currency is not supported", errorMessage);
+    }
+
+    @Test
+    public void should_return_bad_request_for_too_low_amount_for_from_account() throws Exception {
+        String errorMessage = RestControllerTestHelper.buildForStatus(mockMvc, MockMvcResultMatchers.status().isBadRequest())
+                .url(TransferRestController.TRANSFER_URL)
+                .requestJson(CREATE_TRANSFER_JSON_WITH_TOO_LOW_AMOUNT)
+                .checkPostRequest()
+                .andReturn().getResponse().getErrorMessage();
+
+        Assert.assertEquals("From account amount is too low", errorMessage);
     }
 }

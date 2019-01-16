@@ -1,7 +1,5 @@
 package pl.jbsoft.money_transfer.controller.rest.account;
 
-import org.hamcrest.Matchers;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,17 +11,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import pl.jbsoft.money_transfer.business.account.Account;
 import pl.jbsoft.money_transfer.controller.date.DateProvider;
-import pl.jbsoft.money_transfer.controller.repository.AccountRepository;
 import pl.jbsoft.money_transfer.controller.rest.RestControllerTestHelper;
 
 import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -31,14 +25,15 @@ import java.util.Optional;
 @Transactional
 public class AccountRestControllerTest {
 
-    private static final String ALL_ACCOUNT_JSON = "[{\"id\": 1,\"mainOwnerId\": 1,\"balanceAmount\": 0,\"balanceCurrency\": \"USD\",\"creationDate\": \"2018-12-31T23:00:00.000+0000\"}," +
-            "{\"id\": 2,\"mainOwnerId\": 2, \"balanceAmount\": 0,\"balanceCurrency\": \"USD\",\"creationDate\": \"2018-12-31T23:00:00.000+0000\"}," +
-            "{\"id\": 3,\"mainOwnerId\": 3,\"balanceAmount\": 0,\"balanceCurrency\": \"USD\",\"creationDate\": \"2018-12-31T23:00:00.000+0000\"}]";
+    private static final String ALL_ACCOUNT_JSON = "[{\"id\": 1,\"mainOwnerId\": 1,\"balanceAmount\": 100,\"balanceCurrency\": \"USD\",\"creationDate\": \"2018-12-31T23:00:00.000+0000\"}," +
+            "{\"id\": 2,\"mainOwnerId\": 2, \"balanceAmount\": 10,\"balanceCurrency\": \"USD\",\"creationDate\": \"2018-12-31T23:00:00.000+0000\"}," +
+            "{\"id\": 3,\"mainOwnerId\": 3,\"balanceAmount\": 5,\"balanceCurrency\": \"USD\",\"creationDate\": \"2018-12-31T23:00:00.000+0000\"}," +
+            "{\"id\":4,\"mainOwnerId\":3,\"balanceAmount\":5,\"balanceCurrency\":\"PLN\",\"creationDate\":\"2018-12-31T23:00:00.000+0000\"}]";
 
-    private static final String SINGLE_ACCOUNT_JSON = "{\"id\": 1,\"mainOwnerId\": 1, \"balanceAmount\": 0, \"balanceCurrency\": \"USD\", \"creationDate\": \"2018-12-31T23:00:00.000+0000\"}";
+    private static final String SINGLE_ACCOUNT_JSON = "{\"id\": 1,\"mainOwnerId\": 1, \"balanceAmount\": 100, \"balanceCurrency\": \"USD\", \"creationDate\": \"2018-12-31T23:00:00.000+0000\"}";
     private static final String CREATE_ACCOUNT_JSON_REQUEST = "{\"mainOwnerId\": 2, \"currency\": \"USD\"}";
     private static final String CREATE_INVALID_ACCOUNT_JSON_REQUEST = "{\"mainOwnerId\": 6, \"currency\": \"USD\"}";
-    private static final String CREATE_ACCOUNT_JSON_RESPONSE = "{\"id\": 4,\"mainOwnerId\": 2, \"balanceAmount\": 0, \"balanceCurrency\": \"USD\", \"creationDate\": \"2018-12-31T23:00:00.000+0000\"},";
+    private static final String CREATE_ACCOUNT_JSON_RESPONSE = "{\"id\": 5,\"mainOwnerId\": 2, \"balanceAmount\": 0, \"balanceCurrency\": \"USD\", \"creationDate\": \"2018-12-31T23:00:00.000+0000\"},";
 
     @Autowired
     private MockMvc mockMvc;

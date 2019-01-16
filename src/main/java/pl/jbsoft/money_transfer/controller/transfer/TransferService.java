@@ -39,7 +39,7 @@ public class TransferService {
         }
 
         if (createTransferModel.getAmount().compareTo(fromAccount.getBalance().getAmount()) >= 0) {
-            throw new TransferValidationException("From account amount is to low");
+            throw new TransferValidationException("From account amount is too low");
         }
 
         if (createTransferModel.getAmount().signum() < 1) {

@@ -10,7 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 import pl.jbsoft.money_transfer.business.account.Account;
 import pl.jbsoft.money_transfer.controller.account.AccountService;
 import pl.jbsoft.money_transfer.controller.repository.AccountRepository;
-import pl.jbsoft.money_transfer.controller.rest.V1Constatnts;
+import pl.jbsoft.money_transfer.controller.rest.V1Constants;
 
 import java.util.Collection;
 import java.util.List;
@@ -24,7 +24,7 @@ public class AccountRestController {
 
     private final static Logger LOGGER = Logger.getAnonymousLogger();
 
-    public static final String ACCOUNT_URL = V1Constatnts.BASE_URL + "/accounts";
+    public static final String ACCOUNT_URL = V1Constants.BASE_URL + "/accounts";
 
     @Autowired
     private ModelMapper modelMapper;
@@ -60,14 +60,14 @@ public class AccountRestController {
     public @ResponseBody
     ResponseEntity<AccountRestModel> create(@RequestBody CreateAccountRequest createAccountRequest) {
         try {
-        Account account = accountService.createFromRequest(createAccountRequest);
-        Account save = accountRepository.save(account);
+            Account account = accountService.createFromRequest(createAccountRequest);
+            Account save = accountRepository.save(account);
 
-        return ResponseEntity.ok()
-                .body(convertToDto(save));
+            return ResponseEntity.ok()
+                    .body(convertToDto(save));
         } catch (Exception ex) {
             LOGGER.log(Level.WARNING, ex.getMessage(), ex);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Action failure", ex);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
         }
     }
 

@@ -1,9 +1,11 @@
+DROP TABLE IF EXISTS owner;
 create table owner
 (
    id integer not null auto_increment,
    name varchar(255) not null,
 );
 
+DROP TABLE IF EXISTS account;
 create table account
 (
    id integer not null auto_increment,
@@ -16,6 +18,7 @@ create table account
    REFERENCES owner(id)
 );
 
+DROP TABLE IF EXISTS TRANSFER;
 create table TRANSFER
 (
    transfer_id UUID default random_uuid(),

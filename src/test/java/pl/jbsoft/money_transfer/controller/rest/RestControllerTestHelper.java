@@ -32,6 +32,7 @@ public class RestControllerTestHelper {
 
         return restControllerTestHelper;
     }
+
     public RestControllerTestHelper url(String url) {
         this.url = url;
         return this;
@@ -54,12 +55,12 @@ public class RestControllerTestHelper {
 
     public ResultActions checkGetRequest() throws Exception {
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get(url);
-       return addContentAndPerform(builder);
+        return addContentAndPerform(builder);
     }
 
     public ResultActions checkPostRequest() throws Exception {
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.post(url);
-       return addContentAndPerform(builder);
+        return addContentAndPerform(builder);
     }
 
     public ResultActions checkPutRequest() throws Exception {
